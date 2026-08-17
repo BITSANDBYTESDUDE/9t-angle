@@ -22,20 +22,68 @@
         body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
-            background: #eef3f9;
+            background: linear-gradient(135deg, #eef4fb 0%, #f8fafc 55%, #fff6ed 100%);
             color: var(--text);
+            min-height: 100vh;
         }
 
         .wrap {
             max-width: 820px;
             margin: 28px auto;
             padding: 0 14px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .ambient-shape {
+            position: fixed;
+            z-index: 0;
+            pointer-events: none;
+            opacity: .72;
+        }
+
+        .shape-one {
+            top: 13%; left: 7%; width: 92px; height: 92px;
+            border: 2px solid rgba(244, 122, 32, .28);
+            border-radius: 28px;
+            transform: rotate(25deg);
+            animation: floatOne 7s ease-in-out infinite;
+        }
+
+        .shape-two {
+            right: 8%; bottom: 14%; width: 120px; height: 120px;
+            border-radius: 50%;
+            background: rgba(22, 77, 155, .09);
+            animation: floatTwo 8s ease-in-out infinite;
+        }
+
+        .shape-three {
+            top: 42%; right: 15%; width: 28px; height: 28px;
+            border-radius: 50%;
+            background: var(--orange);
+            box-shadow: 0 0 0 10px rgba(244, 122, 32, .10), 0 0 0 20px rgba(244, 122, 32, .05);
+            animation: pulseDot 3s ease-in-out infinite;
+        }
+
+        @keyframes floatOne {
+            0%, 100% { transform: translateY(0) rotate(25deg); }
+            50% { transform: translateY(-24px) rotate(45deg); }
+        }
+
+        @keyframes floatTwo {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-18px, -25px); }
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { transform: scale(.85); opacity: .55; }
+            50% { transform: scale(1.15); opacity: 1; }
         }
 
         .card {
             background: #fff;
             border-radius: 18px;
-            box-shadow: 0 8px 30px rgba(15, 39, 71, .10);
+            box-shadow: 0 18px 55px rgba(15, 39, 71, .13);
             overflow: hidden;
         }
 
@@ -121,6 +169,22 @@
         }
 
         .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e8eef5;
+        }
+
+        .section-title::before {
+            content: "";
+            width: 5px;
+            height: 22px;
+            border-radius: 5px;
+            background: var(--orange);
+        }
+
+        .section-title {
             margin: 10px 0 16px;
             color: var(--navy);
             font-size: 19px;
@@ -146,6 +210,7 @@
         input[type=tel],
         input[type=number],
         input[type=date],
+        input[type=url],
         select,
         textarea {
             width: 100%;
@@ -155,6 +220,7 @@
             font-size: 15px;
             outline: none;
             background: #fff;
+            transition: border-color .2s, box-shadow .2s;
         }
 
         textarea {
@@ -168,6 +234,9 @@
             border-color: var(--blue);
             box-shadow: 0 0 0 3px rgba(22, 77, 155, .08)
         }
+
+        input::placeholder,
+        textarea::placeholder { color: #9aa7b6; }
 
         .options {
             display: grid;
@@ -213,6 +282,8 @@
             filter: brightness(.98)
         }
 
+        button:disabled { opacity: .7; cursor: wait; }
+
         .small {
             font-size: 12px;
             color: #6b7280;
@@ -231,7 +302,21 @@
             line-height: 1.5;
         }
 
+        .form-footer {
+            margin-top: 24px;
+            padding-top: 18px;
+            border-top: 1px solid #e8eef5;
+            text-align: center;
+            color: #7b8794;
+            font-size: 12px;
+        }
+
+        .form-footer a { color: var(--blue); text-decoration: none; font-weight: 700; }
+        .form-footer a:hover { text-decoration: underline; }
+
         @media(max-width:640px) {
+
+            .ambient-shape { opacity: .35; transform: scale(.7); }
 
             .hero,
             form {
@@ -247,10 +332,17 @@
                 font-size: 25px
             }
         }
+
+        @media (prefers-reduced-motion: reduce) {
+            .ambient-shape { animation: none; }
+        }
     </style>
 </head>
 
 <body>
+    <div class="ambient-shape shape-one" aria-hidden="true"></div>
+    <div class="ambient-shape shape-two" aria-hidden="true"></div>
+    <div class="ambient-shape shape-three" aria-hidden="true"></div>
     <div class="wrap">
         <div class="card">
             <div class="hero">
@@ -347,6 +439,11 @@
                 </div>
 
                 <div class="field">
+                    <label>Portfolio / LinkedIn / Website Link <span style="font-weight:400;color:#7b8794">(Optional)</span></label>
+                    <input type="url" name="Portfolio Link" placeholder="https://example.com/your-profile">
+                </div>
+
+                <div class="field">
                     <label>Previous E-Commerce Knowledge <span class="req">*</span></label>
                     <select name="E-Commerce Knowledge" required>
                         <option value="">Select</option>
@@ -436,6 +533,7 @@
                 <button type="submit">Submit Application</button>
                 <div class="small">Your application will be sent securely through Web3Forms.</div>
                 <div class="success" id="successBox"></div>
+                <div class="form-footer">Form created by <a href="https://bitsandbytesdude.vercel.app/" target="_blank" rel="noopener">bitsandbytsdude</a></div>
             </form>
         </div>
     </div>
